@@ -1,0 +1,16 @@
+[
+{
+  "modid": "mana_wizardry",
+  "name": "Mana Wizardry",
+  "description": "Configure items to require mana to use them.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["BordListian"],
+  "credits": "Vazkii, Williewillus for Botania, Electroblob for Wizardry",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

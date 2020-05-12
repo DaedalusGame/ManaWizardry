@@ -1,0 +1,82 @@
+
+// For those who want the bleeding edge
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven { url = "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'com.wynprice.cursemaven:CurseMaven:1.2.3'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'com.wynprice.cursemaven'
+
+
+version = "0.1"
+group= "mana_wizardry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "Mana Wizardry"
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+minecraft {
+    version = "1.12.2-14.23.5.2814"
+    runDir = "run"
+    mappings = "snapshot_20171125"
+    replace "%VERSION%": "${project.version}"
+    useDepAts = true
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier "dev"
+}
+
+artifacts {
+    archives deobfJar
+}
+
+repositories {
+    maven { url 'http://dvs1.progwml6.com/files/maven' }
+    maven { url 'modmaven.k-4u.nl' }
+    maven { url 'https://minecraft.curseforge.com/api/maven/' }
+}
+
+dependencies {
+    deobfCompile curse.resolveUrl("https://www.curseforge.com/minecraft/mc-mods/electroblobs-wizardry/files/2929294")
+    deobfCompile curse.resolveUrl("https://www.curseforge.com/minecraft/mc-mods/botania/files/2846950")
+    deobfCompile curse.resolveUrl("https://www.curseforge.com/minecraft/mc-mods/packagedauto/files/2935431")
+
+    deobfCompile "mezz.jei:jei_1.12.2:4.13.1.225"
+    deobfCompile "baubles:Baubles:1.12:1.5.2"
+    
+    compile files('libs/')
+}
+
+processResources
+{
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+idea { module { inheritOutputDirs = true } }
